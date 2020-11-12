@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:easy_permission_validator/easy_permission_validator.dart';
 
 class PostImage extends StatefulWidget {
   PostImage({Key key}) : super(key: key);
@@ -11,6 +12,17 @@ class PostImage extends StatefulWidget {
 
 class _PostImageState extends State<PostImage> {
   File imageFile;
+  _permissionRequest(BuildContext context) async {
+    final permissionValidator = EasyPermissionValidator(
+      context: context,
+      appName: 'Easy Permission Validator',
+    );
+    var result = await permissionValidator.camera();
+    if (result) {
+      _showChoiceDialog(context);
+    }
+  }
+
   _openGallery(BuildContext context) async {
     PickedFile pickedFile = await ImagePicker().getImage(
       source: ImageSource.gallery,
@@ -103,7 +115,7 @@ class _PostImageState extends State<PostImage> {
               backgroundColor: Colors.blue,
               child: Icon(Icons.add),
               onPressed: () {
-                _showChoiceDialog(context);
+                _permissionRequest(context);
               },
             ),
           ),

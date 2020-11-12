@@ -26,6 +26,7 @@ dependencies:
   camera: ^0.5.8+11
   image_picker: ^0.6.7+14
   curved_navigation_bar: ^0.3.4
+  easy_permission_validator: ^1.0.5
 
 
   # The following adds the Cupertino Icons font to your application.
