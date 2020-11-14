@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "330010335079",
+    "firebase_url": "https://camera-demo-55ed5.firebaseio.com",
+    "project_id": "camera-demo-55ed5",
+    "storage_bucket": "camera-demo-55ed5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:330010335079:android:4937b0bfc0ce57cef001c2",
+        "android_client_info": {
+          "package_name": "camera.demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "330010335079-3nirmiftribhamcvlltfap9ofm4drq3b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "camera.demo",
+            "certificate_hash": "1139d444348c58e3b7d7b612f38b9867dc373b82"
+          }
+        },
+        {
+          "client_id": "330010335079-4n24lmm7c0f0pi946n2jkqchel9c6ovq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyNSTMQBEPdqpFP44S3ruZ61iHzv7WPio"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "330010335079-4n24lmm7c0f0pi946n2jkqchel9c6ovq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
