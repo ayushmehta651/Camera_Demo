@@ -33,6 +33,7 @@ dependencies:
   image_picker: ^0.6.7+14
   curved_navigation_bar: ^0.3.4
   easy_permission_validator: ^1.0.5
+  cached_network_image: ^2.3.3
 
 
   # The following adds the Cupertino Icons font to your application.

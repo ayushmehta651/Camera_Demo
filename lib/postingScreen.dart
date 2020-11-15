@@ -1,8 +1,10 @@
 import 'dart:io';
-import 'package:camera_demo/services/curd.dart';
+import 'package:camera_demo/services/crud.dart';
 import 'package:easy_permission_validator/easy_permission_validator.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:random_string/random_string.dart';
 
 class PostingScreen extends StatefulWidget {
   PostingScreen({Key key}) : super(key: key);
@@ -17,20 +19,47 @@ class _PostingScreenState extends State<PostingScreen> {
   File imageFile;
   String destination;
   String work;
-  bool _isLoading = true;
+  bool _isLoading = false;
+
+  uploadPost() async {
+    if (imageFile != null) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      final Reference firebaseStorageRef = FirebaseStorage.instance
+          .ref()
+          .child("postImage")
+          .child("${randomAlphaNumeric(9)}.jpg");
+
+      final UploadTask task = firebaseStorageRef.putFile(imageFile);
+
+      var downloadUrl = await (await task.whenComplete(() => print('hello')))
+          .ref
+          .getDownloadURL();
+      print("the download url is $downloadUrl");
+
+      Map<String, String> postImage = {
+        "imageUrl": downloadUrl,
+        "destination": destination,
+        "work": work,
+      };
+      crudMethods.addPost(postImage).then((result) {
+        Navigator.pop(context);
+      });
+    } else {}
+  }
 
   _permissionRequest(BuildContext context) async {
     final permissionValidator = EasyPermissionValidator(
       context: context,
       appName: 'Bubble',
     );
-    var result = await permissionValidator.camera();
-    if (result) {
-      _showChoiceDialog();
-    }
+    await permissionValidator.camera();
   }
 
   _openCamera() async {
+    _permissionRequest(context);
     PickedFile pickedFile = await ImagePicker().getImage(
       source: ImageSource.camera,
     );
@@ -43,6 +72,7 @@ class _PostingScreenState extends State<PostingScreen> {
   }
 
   _openGallery() async {
+    _permissionRequest(context);
     PickedFile pickedFile = await ImagePicker().getImage(
       source: ImageSource.gallery,
     );
@@ -86,12 +116,6 @@ class _PostingScreenState extends State<PostingScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _permissionRequest(context);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -125,20 +149,15 @@ class _PostingScreenState extends State<PostingScreen> {
                       height: 10,
                     ),
                     imageFile != null
-                        ? GestureDetector(
-                            onTap: () {
-                              _showChoiceDialog();
-                            },
-                            child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: 16),
-                              height: 400,
-                              width: MediaQuery.of(context).size.width,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(6),
-                                child: Image.file(
-                                  imageFile,
-                                  fit: BoxFit.cover,
-                                ),
+                        ? Container(
+                            margin: EdgeInsets.symmetric(horizontal: 16),
+                            height: 400,
+                            width: MediaQuery.of(context).size.width,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(6),
+                              child: Image.file(
+                                imageFile,
+                                fit: BoxFit.cover,
                               ),
                             ),
                           )
@@ -149,9 +168,14 @@ class _PostingScreenState extends State<PostingScreen> {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(6)),
                             width: MediaQuery.of(context).size.width,
-                            child: Icon(
-                              Icons.add_a_photo,
-                              color: Colors.black45,
+                            child: GestureDetector(
+                              onTap: () {
+                                _showChoiceDialog();
+                              },
+                              child: Icon(
+                                Icons.add_a_photo,
+                                color: Colors.black45,
+                              ),
                             ),
                           ),
                     SizedBox(
@@ -178,7 +202,9 @@ class _PostingScreenState extends State<PostingScreen> {
                           RaisedButton(
                               color: Colors.blue,
                               child: Text("Uplaod"),
-                              onPressed: () {})
+                              onPressed: () {
+                                uploadPost();
+                              })
                         ],
                       ),
                     )
